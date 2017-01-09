@@ -340,18 +340,18 @@ CT.wait(['jQuery','MobileDetect'],function($){
 			});
 
 			$win.resize(reset).scroll(setAffix);
-			$(function () {
+			document.addEventListener('domready',function(){
 				setTimeout(function(){
-						$('[data-ct-affix]').each(function () {
-							new Affix(this, $(this).data('ct-affix'));
-						});
+					$('[data-ct-affix]').each(function () {
+						new Affix(this, $(this).data('ct-affix'));
+					});
 
-						reset();
-						new Watch(document.body,60).watch('clientHeight', function () {
-							repairColumns();
-							setAffix();
-						});
-				},100);			
+					reset();
+					new Watch(document.body,60).watch('clientHeight', function () {
+						repairColumns();
+						setAffix();
+					});
+				},100);
 			});
 			Affix.affixs = affixs;
 			return Affix;
