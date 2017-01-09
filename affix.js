@@ -202,14 +202,21 @@ CT.wait(['jQuery','MobileDetect'],function($){
 						this.setFixed(scroll,i);
 					});
 				}
-			$win = $(window),
+			$win = $(window), $html = $('html'),
 			compair = function (a, b) { return !(a.left + 0.5 >= b.right || a.right - 0.5 <= b.left); },
 			repairRects = function () {
 				$.each(affixs, function () { this.repairRect(); });
 			},
 			repairColumns = function () {
 				repairRects();
-				var columns = [];
+				var winWidth = $win.width();
+				var columns = [{
+					top: 0, left: 0, right: winWidth,
+					affix: {
+						afterAffixs:[], atTop: 0,
+						rect: { height: parseInt($html.css('padding-top') || 0) }
+					}
+				}];
 				$.each(affixs, function (i) {
 					if (!this.active) return;
 					var affix = this, rect = this.rect, top = 0, bg, end;
@@ -340,7 +347,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 			});
 
 			$win.resize(reset).scroll(setAffix);
-			document.addEventListener('domready',function(){
+			//$(function(){
 				setTimeout(function(){
 					$('[data-ct-affix]').each(function () {
 						new Affix(this, $(this).data('ct-affix'));
@@ -352,7 +359,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 						setAffix();
 					});
 				},100);
-			});
+			//});
 			Affix.affixs = affixs;
 			return Affix;
 		})(jQuery);
