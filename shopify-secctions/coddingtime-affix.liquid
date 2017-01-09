@@ -1,0 +1,158 @@
+{% if section.blocks.size > 0 %}
+  <script type="text/javascript" src="https://cdn.rawgit.com/codingtimevn/jsexts/master/core.js"></script>
+  <script type="text/javascript">
+    CT.require('CT.Affix', 'affix.js', function(Affix){
+        var getHides = function(s){
+              s=s.split('\n');
+              var hides = [];
+              s.forEach(function(s){
+                s = s.split(':');
+                s[0] && hides.push({
+                  selector: s[0],
+                  space: s[1],
+                  at: s[2]
+                })
+              });
+              return hides; 
+            },
+            getHideParent = function(s){
+              s = s.split(':');
+              return {selector: s[0],space:s[1]}
+            }
+        ;
+      {% for block in section.blocks %}
+      	new Affix("{{block.settings.selector}}", {
+                     hideAfter: Boolean({{block.settings.hideAfter}}),
+					 hideParent: getHideParent('{{block.settings.hideParent}}'),
+                     hides: getHides('{{block.settings.hides}}'),
+                     push: '{{block.settings.push}}',
+                     space: Number('{{block.settings.space}}'),
+                     watch: Boolean({{block.settings.watch}}),
+                     initCss: '{{block.settings.initCss}}',
+                     startCss: '{{block.settings.startCss}}',
+                     hideEffect: '{{block.settings.hideEffect}}' || 'slideUp'
+        });
+      {% endfor %}
+    });
+  </script>
+<style>
+  .page-container{
+    -ms-transform: none;
+    -webkit-transform: none;
+    transform: none;
+  }
+</style>
+{% endif %}
+{% schema %}
+  {
+    "name": "Coddingtime Affix",
+    "settings": [],
+    "blocks": [ 
+      {
+        "type": "image",
+        "name": "Assign setting",
+        "settings": [
+          {
+            "type": "text",
+            "id": "selector",
+            "label": "Assign (#id,.class ...)"
+          },
+          {
+            "type": "text",
+            "id": "space",
+            "label": "Space top(int)"
+          },
+          {
+            "type": "select",
+            "id": "hideEffect",
+            "label": "Hide effect",
+			"options":[
+              {
+                "label": "Slide up",
+                "value": "slideUp"
+              },
+              {
+                "label": "drop up",
+                "value": "dropUp"
+              },
+              {
+                "label": "Drop left",
+                "value": "dropLeft"
+              },
+              {
+                "label": "Drop right",
+                "value": "dropRight"
+              },
+              {
+                "label": "Scale",
+                "value": "scale"
+              },
+              {
+                "label": "Scale drop",
+                "value": "scaleDrop"
+              },
+              {
+                "label": "Scale Y",
+                "value": "scaleY"
+              },
+              {
+                "label": "Scale Y Drop",
+                "value": "scaleYDrop"
+              },
+              {
+                "label": "Paralax",
+                "value": "paralax"
+              }
+			]
+          },
+          {
+            "type": "text",
+            "id": "push",
+            "label": "When hide will push (#id,.class ...)"
+          },
+          {
+            "type": "text",
+            "id": "hideParent",
+            "label": "Hide on parent (#id,.class:int)"
+          },
+          {
+            "type": "checkbox",
+            "id": "hideAfter",
+            "label": "Hide on bottom"
+          },
+          {
+            "type": "textarea",
+            "id": "hides",
+            "label": "Hide on settings",
+			"info": "Ex: #id,.class:10 (hide on selector with 10px, breakline to add new hide selector)"
+          },
+          {
+            "type": "textarea",
+            "id": "initCss",
+            "label": "Initialize css"
+          },
+          {
+            "type": "textarea",
+            "id": "startCss",
+            "label": "Start fixed css"
+          },
+          {
+            "type": "checkbox",
+            "id": "watch",
+            "label": "Watch size change"
+          },
+          {
+            "type": "checkbox",
+            "id": "mobile",
+            "label": "Mobile suport"
+          },
+          {
+            "type": "checkbox",
+            "id": "tablet",
+            "label": "Tablet suport"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}

@@ -96,7 +96,7 @@
 			Require([{name: name, url: callback}],arguments[2]);
 		}
 	}
-	Require._rootUrl = '//localhost/jsexts/';
+	Require._rootUrl = '//cdn.rawgit.com/codingtimevn/jsexts/master/';
 	Require._regUrl = /^http|^\/\//;
 	Require._loaded = {};
 	Require._xhr = function(opts){
