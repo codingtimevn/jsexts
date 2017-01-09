@@ -43,7 +43,7 @@
 			var readys = [];
 			Wait._waits.forEach(function(obj,index){
 				var args = [];
-				for(var i in obj.names){
+				for(var i = 0, j = obj.names.length; i< j; i++){
 					name = obj.names[i];
 					if(Wait._handlers[name] === false || Wait._handlers[name] === undefined && !(Wait._handlers[name] = Exitst(name))) return;
 					args.push(Wait._handlers[name]);
@@ -96,7 +96,7 @@
 			Require([{name: name, url: callback}],arguments[2]);
 		}
 	}
-	Require._rootUrl = '//rawgit.com/codingtimevn/jsexts/master/';
+	Require._rootUrl = '//rawgit.com/codingtimevn/jsexts/master/src';
 	Require._regUrl = /^http|^\/\//;
 	Require._loaded = {};
 	Require._xhr = function(opts){
