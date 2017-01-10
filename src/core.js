@@ -96,7 +96,7 @@
 			Require([{name: name, url: callback}],arguments[2]);
 		}
 	}
-	Require._rootUrl = '//cdn.rawgit.com/codingtimevn/jsexts/1e80eefc/src/';
+	Require._rootUrl = '//cdn.rawgit.com/codingtimevn/jsexts/master/src/';
 	Require._regUrl = /^http|^\/\//;
 	Require._loaded = {};
 	Require._xhr = function(opts){
