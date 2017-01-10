@@ -7,10 +7,15 @@ CT.wait(['jQuery','MobileDetect'],function($){
 				selector = typeof selector == 'string' || selector.tagName ? $(selector) : selector;
 
 				if (selector.length === 0) return false;
-				if (selector.length > 1) return selector.each(function () {
-					new Affix($(this), options);
-				}), false;
-				if (selector.data('ctAffixHandler')) return selector.data('ctAffixHandler');
+				if (selector.length > 1) {
+				    var afs = [];
+				    selector.each(function () {
+				        afs.push(new Affix($(this), options));
+				    });
+				    return afs.filter(function (v) { return v});
+				};
+				if ($Affix.triggerHandler('add', [selector, options]) === false) return false;
+				if (selector.data('ctAffixInstance')) return selector.data('ctAffixInstance');
 				options = $.extend(true, {}, Affix.options, options);
 				$.extend(options, {
 				    initCss: parseCss(options.initCss),
@@ -41,7 +46,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 				    },
 				    remove: function () {
 				        Affix.affixs.splice(Affix.affixs.indexOf(this), 1);
-				        delete selector.data().ctAffixHandler;
+				        delete selector.data().ctAffixInstance;
 				        selector.attr('style', this.style);
 				        this.holder.remove();
 				        if (options.watch) {
@@ -119,7 +124,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 						$.each(this.hides, function () {
 							var hide = this;
 							this.element.each(function () {
-							    var el = $(this), affix = el.data('ctAffixHandler');
+							    var el = $(this), affix = el.data('ctAffixInstance');
 								var hideRect = affix && affix.fixed ? affix.holder.offset() : el.offset();
 								hideRect.top -= (hide.space || 0);
 								hideRect.width = el.outerWidth();
@@ -131,7 +136,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 							});
 						});
 						this.rect = rect;
-					},
+					}, 
 					repairhideAfter: function () {
 						if (!options.hideAfter || !this.active) return this;
 						$.each(this.afterAffixs, function () {
@@ -153,7 +158,10 @@ CT.wait(['jQuery','MobileDetect'],function($){
 					},
 					reset: function () {
 						this.fixed = false;
-						this.setHidden = Affix.hideEffects[options.hideEffect] || Affix.hideEffects.dropUp;
+						this.setHidden = (function () {
+						    var effect = Affix.hideEffects[options.hideEffect] || Affix.hideEffects.dropUp;
+						    return function (i) { if(selector.triggerHandler('ct-affix-effect',[i]) !== false) effect.call(this, i); }
+						})();
 						this.element.attr('style', this.style).css(options.initCss);
 						$.extend(options.startCss, {
 							width: this.element.outerWidth(),
@@ -207,10 +215,12 @@ CT.wait(['jQuery','MobileDetect'],function($){
 					options: options
 				});
 				this.reset();
-				selector.data('ctAffixHandler', this);
+				selector.data('ctAffixInstance', this);
 				Affix.addAffix(this);
+				$Affix.triggerHandler('added', [this]);
 			};
-			var
+		    var
+                $Affix = $(Affix),
 				affixs = [],
 				parseCss = function (str) {
 					str = str || '';
