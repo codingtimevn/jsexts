@@ -11,10 +11,12 @@ CT.wait(['jQuery','MobileDetect'],function($){
 					new Affix($(this), options);
 				}), false;
 				if (selector.data('ctAffixHandler')) return selector.data('ctAffixHandler');
-				options = $.extend(true, {}, Affix.options, options, {
-					initCss: parseCss(options.initCss),
-					startCss: parseCss(options.startCss)
+				options = $.extend(true, {}, Affix.options, options);
+				$.extend(options, {
+				    initCss: parseCss(options.initCss),
+				    startCss: parseCss(options.startCss)
 				});
+
 				var
 					responsive = (md.tablet() ? options.tablet : true) && (md.phone() ? options.mobile : true),
 					node = selector[0],
@@ -362,6 +364,7 @@ CT.wait(['jQuery','MobileDetect'],function($){
 					hideParent: {},
 					hides: [],
 					push: undefined,
+                    watch: false,
 					mobile: false,
 					tablet: true,
 					initCss: '',
